@@ -1,0 +1,73 @@
+{
+  "plugin_manifest": {
+    "schema_version": "1.2",
+    "plugin": {
+      "name": "Firecrawl Web Scraper",
+      "version": "1.0.1",
+      "description": "基于Firecrawl API的智能网页抓取插件，支持Markdown格式化和元数据提取",
+      "author": "Your Name <contact@example.com>",
+      "license": "Apache-2.0",
+      "main_class": "FirecrawlSpider",
+      "config": {
+        "api_endpoint": {
+          "type": "string",
+          "default": "https://api.firecrawl.dev/v1/search",
+          "required": true
+        },
+        "env_vars": [
+          {
+            "name": "fc-e20bc1cca8bd4a9a90a75fa2b8e9d260",
+            "description": "Firecrawl服务认证密钥",
+            "required": true
+          }
+        ]
+      },
+      "supported_domains": [
+        "*"
+      ],
+      "rate_limit": {
+        "requests": 5,
+        "per_seconds": 60,
+        "strategy": "exponential_backoff"
+      },
+      "dependencies": {
+        "python": ">=3.8",
+        "packages": [
+          {
+            "name": "requests",
+            "version": ">=2.25.1"
+          }
+        ]
+      },
+      "permissions": [
+        "network_access",
+        "env_vars_read",
+        "data_caching"
+      ],
+      "content_limits": {
+        "max_html_length": 500000,
+        "max_markdown_length": 100000,
+        "allowed_mime_types": [
+          "text/html",
+          "text/markdown"
+        ]
+      },
+      "hooks": {
+        "pre_scrape": {
+          "description": "执行爬取前的验证逻辑",
+          "params": ["url"]
+        },
+        "post_process": {
+          "description": "内容格式化处理管道",
+          "params": ["raw_content"]
+        }
+      },
+      "health_check_endpoint": "/_status",
+      "error_codes": {
+        "FC-401": "无效的API密钥",
+        "FC-402": "API配额耗尽",
+        "FC-429": "请求频率过高"
+      }
+    }
+  }
+}
